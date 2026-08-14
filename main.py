@@ -1,21 +1,20 @@
 import random
 
-print("Hello! I am a Rock-Paper-Scissors bot. Here are a few rules:")
-print("1. We have three choices: rock, paper, or scissors.")
-print("2. You make your move, then I make mine and display the result (fair play guaranteed!).")
-print('To view your current score during a match, type: "score".')
-print('To start a game, type "start game". To return to the main menu, type "end game". To exit the application, type "exit".')
-print("Ready to play?\n")
+print("Hello! I am a Rock-Paper-Scissors bot! I have a few rules:")
+print("1. We have three objects: Rock, Scissors, Paper")
+print("2. You make your move, and I make mine and display the result (fair play guaranteed!)")
+print('To display the score write to me - "score"')
+print('To start a game write to me - "start game", to go back to the menu - "end game", and to end the whole program - "exit"')
+print("Shall we start?")
 
-# History & Session Tracking
-player_move_archive = []  # History of player moves across rounds
-last_result = None        # Outcome of previous round relative to the bot ('win', 'lose', 'draw')
-round_num = 1             # Counter for rounds in the current session
-all_games = []            # Archive of completed game sessions
+# Score tracking
+player_move_archive = []  # Player move history
+last_result = None        # Result of previous round (relative to the bot)
+round_num = 1             # Round number
+all_games = []
 
 
-def get_losing_move(move):
-    """Returns the move that loses to the player's last move."""
+def get_losing_move(move):  # Function returns the move that loses to player's last move
     if move == "rock":
         return "scissors"
     elif move == "scissors":
@@ -24,8 +23,7 @@ def get_losing_move(move):
         return "rock"
 
 
-def get_winning_move(move):
-    """Returns the move that beats the player's last move."""
+def get_winning_move(move):  # Function returns the move that beats player's last move
     if move == "rock":
         return "paper"
     elif move == "scissors":
@@ -34,103 +32,109 @@ def get_winning_move(move):
         return "scissors"
 
 
-def behavioral_strategy(player_move_archive, last_result, round_num):
-    """Predicts next move using human psychological tendencies."""
+def strategy(player_move_archive, last_result, round_num):
     if round_num == 1:
-        return "paper"  # First round default analyzer move
-
-    # If the player repeats a move twice, they often switch to a counter move
+        return "paper"
+    # If the same move is repeated twice, the player will likely pick a move losing to the previous one
     if len(player_move_archive) >= 2:
         if player_move_archive[-1] == player_move_archive[-2]:
             return get_losing_move(player_move_archive[-1])
 
     last_player_move = player_move_archive[-1]
-    
-    # After a loss, mirror the player's previous move. After a win, counter it.
+    # After a win repeat the player move, after a loss beat the player move
     if last_result == "lose":
         return last_player_move
     elif last_result == "win":
         return get_winning_move(last_player_move)
-    else:
-        return random.choice(["rock", "paper", "scissors"])
+    else:  # On a draw output a random move
+        return random.choice(["rock", "scissors", "paper"])
 
 
-def statistical_strategy(player_move_archive, round_num):
-    """Calculates the most frequent player move and plays its counter."""
+def stats(player_move_archive):  # Function determines the most used move and beats it
     if round_num == 1:
         return "paper"
 
-    rock_count = player_move_archive.count("rock")
-    scissors_count = player_move_archive.count("scissors")
-    paper_count = player_move_archive.count("paper")
+    # Count how many times the player chose each symbol
+    rock = player_move_archive.count("rock")
+    scissors = player_move_archive.count("scissors")
+    paper = player_move_archive.count("paper")
 
-    # Determine most frequent selection
-    if rock_count >= scissors_count and rock_count >= paper_count:
+    # Find the most frequent move
+    if rock >= scissors and rock >= paper:
         most_common = "rock"
-    elif scissors_count >= paper_count:
+    elif scissors >= paper:
         most_common = "scissors"
     else:
         most_common = "paper"
-
+    # Return the move that beats the most frequent move
     return get_winning_move(most_common)
 
 
-# Main Application Loop
-while True:
+# Main program
+while True:  # handle menu level inputs
+
     user_input = input("> ").strip().lower()
 
     if user_input == "exit":
-        print("Goodbye!")
+        print(f"Bye!")
         exit()
 
     elif user_input == "score":
         if not all_games:
-            print("No saved game history yet. Play a match first!")
+            print("No score yet, we haven't played together yet")
         else:
-            print("\n--- Game History ---")
+            print("\n Game history \n")
             for i, game in enumerate(all_games, 1):
-                strategy_name = "Behavioral" if game["strategy"] == "behavioral" else "Statistical"
-                
+                if game["strategy"] == "strategy":
+                    strategy_name = "Behavioral"
+                else:
+                    strategy_name = "Statistical"
                 if game["player_score"] > game["bot_score"]:
-                    winner = "Player"
+                    winner = "You"
                 elif game["bot_score"] > game["player_score"]:
                     winner = "Bot"
                 else:
-                    winner = "Tie"
-
+                    winner = "Friendship won"
                 print(f"Game {i}")
-                print(f"Strategy: {strategy_name}")
-                print(f"Score: You {game['player_score']} : {game['bot_score']} Bot")
-                print(f"Winner: {winner}\n")
+                print(f"Strategy - {strategy_name}")
+                print(f"Score: {game['player_score']} : {game['bot_score']}")
+                print(f"Winner: {winner}")
+                print()
 
     elif user_input == "start game":
+
+        # Let the player choose a strategy
         print("Select bot strategy:")
-        print("1 — Behavioral (Psychological Win/Loss Analysis)")
-        print("2 — Statistical (Frequency Analysis)")
+        print("1 — Behavioral (win/loss analysis)")
+        print("2 — Statistical (move statistics)")
         strategy_choice = input("Your choice (1 or 2): ").strip()
 
-        loc_player_score = 0
-        loc_bot_score = 0
+        loc_player_score = 0  # Player score in this game
+        loc_bot_score = 0     # Bot score in this game
 
-        current_strategy = "behavioral" if strategy_choice == "1" else "statistical"
+        if strategy_choice == "1":
+            current_strategy = "strategy"
+        else:
+            current_strategy = "stats"
 
-        print("Make your move: rock, paper, or scissors")
+        print("Make your move: rock, paper or scissors")
 
-        # Game Session Loop
+        # Create another loop for multi-round game
         while True:
+            # Read player move
             move = input("Your move: ").strip().lower()
 
-            if move == "end game":
-                print(f"Game Over! Final Score: You — {loc_player_score}, Bot — {loc_bot_score}")
-                print("Returning to main menu...")
-
+            if move == "end game":  # Output score of current game and exit to menu
+                print(f"Game over! Final score for this game: You — {loc_player_score}, Bot — {loc_bot_score}")
+                print("Exit to menu")
+                # Determine winner of this game
                 if loc_player_score > loc_bot_score:
                     winner = "player"
                 elif loc_bot_score > loc_player_score:
                     winner = "bot"
                 else:
                     winner = "draw"
-
+                # Save this game
                 all_games.append({
                     "strategy": current_strategy,
                     "player_score": loc_player_score,
@@ -139,36 +143,36 @@ while True:
                 })
                 break
 
-            elif move == "score":
-                print(f"Current Score: You — {loc_player_score}, Bot — {loc_bot_score}")
+            elif move == "score":  # If player enters score in move field, print score and return to input
+                print(f"Current score: You — {loc_player_score}, Bot — {loc_bot_score}")
                 continue
 
-            elif move not in ["rock", "paper", "scissors"]:
-                print("Invalid input! Please choose: rock, paper, or scissors. Or enter commands: score, end game")
+            elif move not in ["rock", "scissors", "paper"]:
+                print("Invalid move! Try: rock, paper, scissors. Or try one of the commands: score, end game")
                 continue
 
-            # Bot Move Selection
-            if current_strategy == "statistical":
-                bot_move = statistical_strategy(player_move_archive, round_num)
+            # Bot makes a move
+            if current_strategy == "stats":
+                bot_move = stats(player_move_archive)
             else:
-                bot_move = behavioral_strategy(player_move_archive, last_result, round_num)
-
+                bot_move = strategy(player_move_archive, last_result, round_num)
             print(f"My move: {bot_move}")
 
-            # Evaluate Winner
+            # Determine winner and save round result
             if move == bot_move:
-                print("It's a tie!")
+                print("Draw!")
                 last_result = "draw"
             elif (move == "rock" and bot_move == "scissors") or \
                  (move == "scissors" and bot_move == "paper") or \
                  (move == "paper" and bot_move == "rock"):
-                print("You won this round!")
+                print("You won!")
                 loc_player_score += 1
-                last_result = "lose"  # Bot perspective: bot lost
+                last_result = "lose"
             else:
-                print("Bot won this round!")
+                print("Bot won!")
                 loc_bot_score += 1
-                last_result = "win"   # Bot perspective: bot won
+                last_result = "win"
 
+            # Save player move and increase round counter
             player_move_archive.append(move)
             round_num += 1
