@@ -1,0 +1,175 @@
+As the code is a console application, I will provide examples of line-by-line inputs and outputs:
+
+--- Example 1 ---
+Input:
+start game
+Input:
+Select bot strategy:
+1 — Behavioral (win/loss analysis)
+2 — Statistical (move statistics)
+Your choice (1 or 2):
+Input:
+1
+Output:
+Make your move: rock, paper or scissors
+Your move:
+Input:
+rock
+Output:
+My move: paper
+Bot won!
+Your move:
+Input:
+score
+Output:Current score: You — 0, Bot — 1
+Your move:
+exit
+Output:
+Invalid move! Try: rock, paper, scissors. Or try one of the commands: score, end game
+Input:
+End game
+Output:
+Exit to menu
+>
+Input:
+end game
+Output:
+>
+Input:
+exit
+Output:
+Bye!
+
+
+
+--- Example 2 ---
+Input:
+start game
+Output:
+Select bot strategy:
+1 — Behavioral (win/loss analysis)
+2 — Statistical (move statistics)
+Your choice (1 or 2):
+Input:
+2
+Output:
+Make your move: rock, paper or scissors
+Your move:
+Input:
+scissors
+Output:
+My move: paper
+You won!
+Your move:
+Input:
+rock
+Output:
+My move: rock
+Draw!
+Your move:
+Input:
+rock
+Output:
+My move: paper
+Bot won!
+Your move:
+Input:
+scissors
+Output:
+My move: paper
+You won!
+Your move:
+Input:
+Score
+Output:
+Current score: You — 2, Bot — 1
+Your move:
+Input:
+Bye
+Output:
+Invalid move! Try: rock, paper, scissors. Or try one of the commands: score, end game
+Your move:
+Input:
+END game
+Output:
+Game over! Final score for this game: You — 2, Bot — 1
+Exit to menu
+>
+Input:
+exit
+Output:
+Bye!
+
+--- Example 3 ---
+Input:
+start game
+Output:
+Select bot strategy:
+1 — Behavioral (win/loss analysis)
+2 — Statistical (move statistics)
+Your choice (1 or 2):
+Input:
+1
+Output:
+Make your move: rock, paper or scissors
+Your move:
+Input:
+score
+Output:
+Current score: You — 0, Bot — 0
+Your move:
+Input:
+end game
+Output:
+Game over! Final score for this game: You — 0, Bot — 0
+Exit to menu
+>
+Input:
+start game
+Output:
+Select bot strategy:
+1 — Behavioral (win/loss analysis)
+2 — Statistical (move statistics)
+Your choice (1 or 2):
+Input:
+2
+Output:
+Make your move: rock, paper or scissors
+Your move:
+Input:
+rock
+Output:
+My move: paper
+Bot won!
+Your move:
+Input:
+score
+Output:
+Current score: You — 0, Bot — 1
+Your move:
+Input:
+end game
+Output:
+Game over! Final score for this game: You — 0, Bot — 1
+Exit to menu
+>
+Input:
+score
+Output:
+ Game history
+
+Game 1
+Strategy - Behavioral
+Score: 0 : 0
+Winner: Friendship won
+
+Game 2
+Strategy - Statistical
+Score: 0 : 1
+Winner: Bot
+
+>
+Input:
+exit
+Output:
+Bye!
